@@ -70,15 +70,26 @@ const proxyHandler = {
  * @group Database
  */
 class Database {
-  constructor (config) {
+  constructor (config, logger) {
     this.connectionClient = config.client
+    this._logger = logger
 
     if (config.client === 'sqlite' || config.client === 'sqlite3') {
       config.useNullAsDefault = _.defaultTo(config.useNullAsDefault, true)
     }
 
+    this._debug = config.debug
+    config.debug = false
+
     this.knex = knex(config)
     this._globalTrx = null
+
+    if (this._debug) {
+      this.knex.on('query-response', function (data, meta) {
+        this._logger.info('SQL query:', meta.sql)
+        this._logger.notice(JSON.stringify(data))
+      })
+    }
 
     return new Proxy(this, proxyHandler)
   }

@@ -25,8 +25,9 @@ class LucidProvider extends ServiceProvider {
   _registerDatabase () {
     this.app.singleton('Adonis/Src/Database', (app) => {
       const Config = app.use('Adonis/Src/Config')
+      const Logger = app.use('Adonis/Src/Logger')
       const Database = require('../src/Database/Manager')
-      return new Database(Config)
+      return new Database(Config, Logger)
     })
     this.app.alias('Adonis/Src/Database', 'Database')
   }
