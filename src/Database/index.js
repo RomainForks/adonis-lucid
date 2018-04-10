@@ -85,7 +85,7 @@ class Database {
     this._globalTrx = null
 
     if (this._debug) {
-      this.knex.on('query-response', function (data, meta) {
+      this.knex.on('query-response', (data, meta) => {
         this._logger.info('SQL query:', meta.sql)
         this._logger.notice(JSON.stringify(data))
       })

@@ -40,8 +40,9 @@ const proxyGet = require('../../lib/proxyGet')
  * @class DatabaseManager
  */
 class DatabaseManager {
-  constructor (Config) {
+  constructor (Config, Logger) {
     this.Config = Config
+    this.Logger = Logger
     this._connectionPools = {}
     return new Proxy(this, {
       get: proxyGet('connection', true)
@@ -78,7 +79,7 @@ class DatabaseManager {
       throw CE.RuntimeException.missingDatabaseConnection(name)
     }
 
-    this._connectionPools[name] = new Database(connectionSettings)
+    this._connectionPools[name] = new Database(connectionSettings, this.Logger)
     return this._connectionPools[name]
   }
 
